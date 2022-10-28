@@ -59,13 +59,13 @@ Au clic sur le bouton "S'enregistrer", le formulaire va déclancher l'évenement
 
 Le inputs son créés à partir du composant `nz-form-item` de la ui library [ng-zorro](https://ng.ant.design/components/input/en)
 
-#### Level I
+#### Level I ✅
     
 1. Terminer le formulaire pour l'ajout d'un utilisateur
 2. Rendre le username et le mot de passe obligatoires
 3. En cas de succès, rediriger l'utilisateur sur /splash/login
 
-#### Level II
+#### Level II ✅
 
 4. Afficher les messages d'erreurs de validations
     > Utiliser la propriété `nzErrorTip` sur le composant `nz-form-control`
@@ -81,13 +81,13 @@ Permet à un utilisateur de se connecter à la plateforme.
 Le formulaire doit contenir 2 champs : "username", "Mot de passe".
 Le clic sur le bouton "Connexion" permet de soumettre le formulaire en appelant la méthode `submit()` du composant.
 
-#### Level I
+#### Level I ✅
 
 1. Faire le formulaire de sign in
 2. Rendre le username et le mot de passe obligatoires
 3. Rediriger l'utilisateur sur "/" en cas de succès
 
-#### Level II
+#### Level II ✅
 
 4. Afficher les messages d'erreurs de validation pour chaque champs
 5. Afficher un message si le login a échoué
@@ -99,7 +99,7 @@ Une room est une salle de discussion dans laquelle les utilisateurs peuvent s'é
 Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster du contenu.
 
 
-#### Level I
+#### Level I ✅
 
 1. Afficher la liste des rooms dans le menu
     > `src/modules/room/room-menu`
@@ -108,7 +108,7 @@ Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster 
 
 2. Pouvoir naviguer vers room au clic dans le menu
 
-#### Level II
+#### Level II ✅
 
 3. Pouvoir ajouter une nouvelle room
     > Dans `src/modules/room/room-menu`
@@ -133,12 +133,12 @@ Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster 
   
 5. Ajouter ajouter les nouvelles rooms créées dynamiquement
 
-#### Level III
+#### Level III ✅
 6. Sélectionner par défaut la dernière room visité par l'utilisateur en stockant l'information dans le [localStorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage)
 
 ### Post
 
-### Level I
+### Level I ✅
 1. Pouvoir rédiger et envoyer un post
     > `src/modules/input/components/feed-input`
 
@@ -152,7 +152,7 @@ Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster 
 8. Afficher le player de youtube si le message contient un lien youtube
 9. Implémenter le bouton like
 
-### Level II
+### Level II 
 8. Utiliser [luxon](https://moment.github.io/luxon/docs/class/src/duration.js~Duration.html) pour formatter les date à l'aide d'un [Pipe Angular](https://angular.io/guide/pipes#creating-pipes-for-custom-data-transformations)
 9. Insérer les nouveaux posts reçues via WebSocket
 10. Pouvoir uploader des photos, vidéos et audios

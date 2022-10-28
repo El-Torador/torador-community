@@ -2,29 +2,31 @@
   <form nz-form nzLayout="vertical" #f="ngForm" (ngSubmit)="submit()">
     <nz-form-item>
       <nz-form-label nzFor="username">Username</nz-form-label>
-      <nz-form-control>
+      <nz-form-control nzErrorTip="Nom d'utilisateur requis">
         <input class="ant-input" type="text" name="username" id="username" [(ngModel)]="model.username"
-          #username="ngModel">
+          #username="ngModel" required>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label nzFor="password">Mot de passe</nz-form-label>
-      <nz-form-control>
+      <nz-form-control nzErrorTip="Mot de passe requis">
         <input class="ant-input" type="password" name="password" id="password" [(ngModel)]="model.password"
-          #password="ngModel">
+          #password="ngModel" required>
       </nz-form-control>
     </nz-form-item>
 
     <nz-form-item>
       <nz-form-label nzFor="confirm-password">Confirmation du mot de passe</nz-form-label>
-      <nz-form-control>
+      <nz-form-control nzErrorTip="Veuillez confirmer votre mot de passe SVP.">
         <input class="ant-input" type="password" name="confirm-password" id="confirm-password"
-          [(ngModel)]="model.confirmPassword" #confirm="ngModel">
+          [(ngModel)]="model.confirmPassword" #confirm="ngModel" required>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <button class="register-button" nz-button nzType="default" [disabled]="f.form.invalid">S'enregistrer</button>
+        <button *ngIf="!loading" class="register-button" nz-button nzType="default" [disabled]="f.form.invalid">S'enregistrer</button>
+        <button *ngIf="loading" class="register-button" type="button" nz-button nzType="default" disabled>Enregistrement
+          en cours...</button>
       </nz-form-control>
     </nz-form-item>
   </form>

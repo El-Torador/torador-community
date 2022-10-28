@@ -51,9 +51,15 @@ export interface MessageVideoElement extends MessageMediaElement<'video'> {
 export interface MessageAudioElement extends MessageMediaElement<'audio'> {
 }
 
+export interface MessagePDFElement{
+    type: 'pdf';
+    url: string;
+}
+
 export type MessageElement =
     MessageTextElement |
     MessageYoutubeElement |
     MessageImageElement |
     MessageVideoElement |
-    MessageAudioElement;
+    MessageAudioElement |
+    MessagePDFElement;

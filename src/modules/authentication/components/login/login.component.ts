@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   ngForm: NgForm;
 
   model = new LoginFormModel();
+  loading = false;
 
   constructor(
     private router: Router,
@@ -30,22 +31,29 @@ export class LoginComponent implements OnInit {
   }
 
   goToRegistration() {
-    // TODO naviguer vers "/splash/register"
+    this.router.navigateByUrl('splash/register');
   }
 
   submit() {
     this.login();
   }
+  
 
   async login() {
     if (this.ngForm.form.invalid) {
-      return;
+      if(!this.model.username) return this.nzMessageService.warning("Veuillez fournir un nom d'utilisateur.");
+      if(!this.model.password) return this.nzMessageService.warning('Veuillez fournir un mot de passe.');
+      return
     }
 
     try {
+      this.loading = true;
       // TODO vérifier le résultat de l'authentification. Rediriger sur "/" en cas de succès ou afficher une erreur en cas d'échec
-      await this.authService.authenticate(this.model.username, this.model.password);
-
+      const status = await this.authService.authenticate(this.model.username, this.model.password);
+      this.loading = false;
+      
+      if(!status.success) return this.nzMessageService.error('Vos identifiants sont incorrects.');
+      this.router.navigateByUrl('/');
     } catch (e) {
       this.nzMessageService.error("Une erreur est survenue. Veuillez réessayer plus tard");
     }

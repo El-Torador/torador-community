@@ -22,6 +22,10 @@ export class AuthenticationStore extends Store<AuthenticationState | null> {
     this.accessToken$ = this.get(s => s ? s.accessToken : undefined).pipe(distinctUntilChanged());
   }
 
+  get userId() {
+    return this.value?.userId;
+  }
+
   get accessToken(): string | null {
     return this.value ? this.value.accessToken : null;
   }

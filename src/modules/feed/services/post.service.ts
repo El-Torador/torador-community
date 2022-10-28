@@ -32,5 +32,20 @@ export class PostService {
 
     like(post: Post) {
       // TODO appeler la méthode like sur PostCommands
+      this.commands.like(post.roomId, post.id);
+      this.store.mutate(s => {
+        return {
+            ...s,
+            posts: s.posts.map(p => {
+                if(p === post) {
+                    return {
+                        ...post,               
+                        liked: post.liked ? false : true,
+                    }
+                }
+                return p
+            })
+      };
+    });
     }
 }

@@ -5,7 +5,7 @@ import { PostService } from '../../services/post.service';
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.less']
+  styleUrls: ['./post.component.less'],
 })
 export class PostComponent implements OnInit, AfterViewInit {
   @Input()
@@ -19,6 +19,7 @@ export class PostComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.post);
   }
 
   ngAfterViewInit() {
@@ -27,5 +28,6 @@ export class PostComponent implements OnInit, AfterViewInit {
 
   async like() {
     // TODO like du post
+    this.postService.like(this.post);
   }
 }

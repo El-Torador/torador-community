@@ -2,32 +2,31 @@
   <form nz-form nzLayout="vertical" #f="ngForm" (submit)="submit()">
     <nz-form-item>
       <nz-form-label nzFor="username">Username</nz-form-label>
-      <nz-form-control>
-        <!--
-          TODO Ajouter l'input pour username avec le data-binding approprié
-          <input class="ant-input" type="text" name="username" id="username" #username="ngModel">
-         -->
-
+      <nz-form-control nzErrorTip="Nom d'utilisateur requis">
+        <input type="text" class="ant-input" nz-input placeholder="Your username" name="username" id="username"
+          [(ngModel)]="model.username" required />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label nzFor="password">Mot de passe</nz-form-label>
-      <nz-form-control>
-        <!--
-          TODO Ajouter l'input pour password avec le data-binding approprié
-          <input class="ant-input" type="password" name="password" id="password" #password="ngModel">
-         -->
+      <nz-form-control nzErrorTip="Mot de passe requis">
+        <input type="password" class="ant-input" placeholder="Your password" name="password" id="password"
+          [(ngModel)]="model.password" required />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-control>
-        <button class="login-button" type="submit" nz-button nzType="default" [disabled]="f.form.invalid"
+        <button *ngIf="!loading"
+          [title]="f.form.invalid ? 'Veuillez remplir les champs svp !' : 'Cliquer pour vous connecter.'"
+          class="login-button" type="submit" nz-button nzType="default" [disabled]="f.form.invalid"
           (submit)="submit()">Connexion</button>
+        <button *ngIf="loading" class="login-button" type="button" nz-button nzType="default"
+          disabled>Connexion...</button>
       </nz-form-control>
     </nz-form-item>
   </form>
   <p class="divider">Pas encore enregistré ?</p>
 
   <!-- TODO Rediriger sur la page de login au clic sur le bouton -->
-  <button class="register-button" nz-button nzType="primary">Créer un compte</button>
+  <button (click)="goToRegistration()" class="register-button" nz-button nzType="primary">Créer un compte</button>
 </div>

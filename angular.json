@@ -130,5 +130,8 @@
       }
     }
   },
-  "defaultProject": "iti-community"
+  "defaultProject": "iti-community",
+  "cli": {
+    "analytics": "9cb7a84a-8597-4f5f-9031-bfa6bc40b688"
+  }
 }

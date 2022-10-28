@@ -30,7 +30,7 @@ export class FeedInputComponent {
 
   currentMention?: RegExpMatchArray;
 
-  supportedTypes = "image/png,image/jpeg,image/gif,image/bmp,image/bmp,video/mpeg,audio/mpeg,audio/x-wav,image/webp";
+  supportedTypes = "image/png,image/jpeg,image/gif,image/bmp,image/bmp,video/mpeg,video/mp4,application/pdf,audio/mpeg,audio/x-wav,image/webp";
 
   constructor(
     private userService: UserService
@@ -129,6 +129,14 @@ export class FeedInputComponent {
       return;
     }
 
+    const messagePayload: MessageSentEventPayload = {
+      date: new Date(),
+      message: this.message,
+      file: this.file || undefined
+    }
+    
+    this.fireMessageSent(messagePayload)
+    this.clear()
     // TODO émettre  l'évènement "messageSent" via la méthode fireMessageSent
     // TODO vider la zone de saise avec la méthode clear
   }
@@ -144,7 +152,8 @@ export class FeedInputComponent {
   /**
    * Emit the "messageSent" event
    */
-  fireMessageSent() {
+  fireMessageSent(payload: MessageSentEventPayload) {
+    this.messageSent.emit(payload)
     // TODO émettre l'évènement "messageSent"
   }
 

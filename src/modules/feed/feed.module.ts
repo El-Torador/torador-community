@@ -19,16 +19,19 @@ import { UserModule } from '../user/user.module';
 import { HttpPostCommands } from './services/plateform/http/post.commands.http';
 import { HttpPostQueries } from './services/plateform/http/post.queries.http';
 import { FeedSocketService } from './services/feed.socket.service';
+import { RemoveUrlPipe } from './remove-url.pipe';
+import { LisibleDatePipe } from './lisible-date.pipe';
+import { PostAttachementPDFComponent } from './component/post-attachements/post-attachement-pdf/post-attachement-pdf';
 
 @NgModule({
-  declarations: [FeedComponent, PostComponent, PostAttachementImageComponent, PostAttachementVideoComponent, PostAttachementAudioComponent, PostAttachementYoutubeComponent],
+  declarations: [FeedComponent, PostComponent, PostAttachementImageComponent, PostAttachementVideoComponent, PostAttachementAudioComponent, PostAttachementYoutubeComponent, PostAttachementPDFComponent, RemoveUrlPipe, LisibleDatePipe],
   exports: [FeedComponent, PostComponent],
-  providers: [PostMapper, PostService, FeedStore, {
+  providers: [PostMapper, PostService, FeedStore,FeedSocketService, {
     provide: PostCommands,
-    useClass: LocalPostCommands
+    useClass: HttpPostCommands
   }, {
       provide: PostQueries,
-      useClass: LocalPostQueries
+      useClass: HttpPostQueries
     }],
   imports: [
     CommonModule,

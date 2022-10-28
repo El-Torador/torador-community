@@ -7,6 +7,7 @@ import { UserService } from '../../services/user.service';
 import { User } from '../../user.model';
 import { UserStore } from '../../user.store';
 import { NotificationStore } from 'src/modules/notification/notification.store';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-user-widget',
@@ -27,7 +28,8 @@ export class UserWidgetComponent implements OnInit {
     private modalService: NzModalService,
     private notificationStore: NotificationStore,
     private userService: UserService,
-    private store: UserStore
+    private store: UserStore,
+    private nzMessageService: NzMessageService
   ) {
     this.user$ = store.user$;
     this.photoUrl$ = store.get(s => s.user && s.user.photoUrl ? s.user.photoUrl : "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/434px-Unknown_person.jpg");
@@ -46,8 +48,14 @@ export class UserWidgetComponent implements OnInit {
       nzTitle: "Déconnexion",
       nzContent: "Êtes-vous sûr(e) de vouloir déconnecter votre session ?",
       nzOkText: "Déconnexion",
-      nzOnOk: () => {
+      nzOnOk: async () => {
         // TODO logout puis rediriger vers "/splash/login"
+        try {
+          await this.authService.logout();
+          this.router.navigateByUrl('/splash/login');
+        } catch (error) {
+          this.nzMessageService.error("Une erreur est survenue. Veuillez réessayer plus tard");
+        }
       }
     });
   }
