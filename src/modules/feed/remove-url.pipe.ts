@@ -19,9 +19,13 @@ export class RemoveUrlPipe implements PipeTransform {
           value = value.replace(attachement.url, '');
           break;
         case 'youtube':
-          value = value.replace(/(http[s]?:\/\/)?www\.(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
+          value = value.replace(/(http[s]?:\/\/)?(www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
         case 'pdf':
           value = value.replace(/http[s]?:\/\/.+\.(pdf)/gmi, '');
+          break;
+        case 'link':
+          value = value.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gmi, '');
+          break;
         default:
           break;
       }

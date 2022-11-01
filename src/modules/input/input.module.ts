@@ -9,6 +9,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { UserModule } from '../user/user.module';
 import { FeedInputComponent } from './components/feed-input/feed-input.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 @NgModule({
   declarations: [FeedInputComponent],
@@ -22,7 +24,9 @@ import { FeedInputComponent } from './components/feed-input/feed-input.component
     NzUploadModule,
     NzInputModule,
     NzPopoverModule,
-    NzTagModule
+    NzTagModule,
+    NzToolTipModule,
+    PickerModule
   ]
 })
 export class InputModule { }

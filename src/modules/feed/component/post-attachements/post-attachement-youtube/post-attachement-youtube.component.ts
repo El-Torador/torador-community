@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MessageImageElement, MessageYoutubeElement } from '../../../post.model';
+import { MessageYoutubeElement } from '../../../post.model';
 
 @Component({
   selector: 'app-post-attachement-youtube',

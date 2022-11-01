@@ -1,20 +1,55 @@
 <div class="feed-input">
-  <nz-tag nzMode="closeable" (nzOnClose)="onCloseTag()" *ngIf="file">
+  <nz-tag nzMode="closeable" (nzOnClose)="onCloseTag()" *ngIf="file && !audioUrl">
     <span class="tag-inner">{{file?.name}}</span>
   </nz-tag>
   <nz-upload [nzBeforeUpload]="onFileUpload" [nzAccept]="supportedTypes" *ngIf="!file">
-    <button nz-button nzType="primary"><i nz-icon nzType="upload"></i> Photo, Video ou Audio</button>
+    <button nz-tooltip nzTooltipTitle="Envoyer une Photo, PDF, audio ou vidéo" nz-button nzType="primary"><i nz-icon
+        nzType="plus" nzTheme="outline"></i></button>
   </nz-upload>
-  <form class="feed-input-form" (ngSubmit)="send()">
+  <button nz-tooltip [nzTooltipTitle]="isRecording ? 'Je vous écoute...' : 'Cliquez pour dicter votre message.'"
+    [nzLoading]="isTranscript" (click)="speech()" *ngIf="isSpeechRecognitionSupported() && !audioUrl" nz-button
+    nzType="secondary" [nzDanger]="isRecording">
+    <svg width="15" height="15" viewBox="0 0 20 20">
+      <path fill="currentColor"
+        d="M10 22q-.425 0-.712-.288Q9 21.425 9 21V3q0-.425.288-.713Q9.575 2 10 2t.713.287Q11 2.575 11 3v18q0 .425-.287.712Q10.425 22 10 22Zm-4-6q-.425 0-.713-.288Q5 15.425 5 15V9q0-.425.287-.713Q5.575 8 6 8t.713.287Q7 8.575 7 9v6q0 .425-.287.712Q6.425 16 6 16Zm8 2q-.425 0-.712-.288Q13 17.425 13 17V7q0-.425.288-.713Q13.575 6 14 6t.713.287Q15 6.575 15 7v10q0 .425-.287.712Q14.425 18 14 18Zm4-3q-.425 0-.712-.288Q17 14.425 17 14v-4q0-.425.288-.713Q17.575 9 18 9t.712.287Q19 9.575 19 10v4q0 .425-.288.712Q18.425 15 18 15Z" />
+    </svg>
+  </button>
+  <form class="feed-input-form" (ngSubmit)="send()" *ngIf="!audioUrl">
     <textarea (keydown)="onInputKeyDown($event)" (keyup)="onInputKeyUp($event)" nz-input nzAutosize class="ant-input"
       name="message" #input nz-popover nzPopoverPlacement="topLeft" [nzPopoverContent]="contentTemplate"
       [nzPopoverTrigger]="null" placeholder="Rédigez un nouveau message" [ngModel]="message"
       (ngModelChange)="onMessageChanged($event)"></textarea>
   </form>
+
+  <audio style="width: 100%;" *ngIf="audioUrl" controls [src]="audioUrl"></audio>
+  <button *ngIf="!audioUrl" nz-tooltip nz-popover nzPopoverTrigger="click" [nzPopoverContent]="contentTemplateEmoji"
+    nzTooltipTitle="Donnez vie à vos messages avec les émojis 😎" nz-button nzType="secondary">
+    <i nz-icon nzType="smile" nzTheme="outline"></i>
+  </button>
+  <!-- State Recording Buttons Actions -->
+  <button nz-tooltip nzTooltipTitle="Supprimer" *ngIf="audioUrl" (click)="onCloseTag()" nz-button nzDanger>
+    <i nz-icon nzType="delete" nzTheme="outline"></i>
+  </button>
+  <button nz-tooltip nzTooltipTitle="Mettre en pause" *ngIf="isRecord && !isPause" (click)="pauseRecord()" nz-button>
+    <i nz-icon nzType="pause-circle" nzTheme="outline"></i>
+  </button>
+  <button nz-tooltip nzTooltipTitle="Continuer l'enregistrement" *ngIf="isRecord && isPause" (click)="resumeRecord()"
+    nz-button>
+    <i nz-icon nzType="play-circle" nzTheme="outline"></i>
+  </button>
+  <button *ngIf="isRecordMediaSupport() && !audioUrl" nz-tooltip [nzDanger]="isRecord" (click)="record()"
+    [nzTooltipTitle]="isRecord ? 'Je vous écoute...' : 'Cliquez faire un message vocal.'" nz-button nzType="secondary">
+    <i nz-icon nzType="audio" nzTheme="fill"></i>
+  </button>
+  <!-- End Actions -->
   <button nz-button nzType="primary" (click)="send()" [disabled]="!message && !file">Send</button>
 </div>
 <ng-template #contentTemplate>
   <nav class="mentions">
     <a (click)="chooseMention(user)" *ngFor="let user of users">{{user.username}}</a>
   </nav>
+</ng-template>
+<ng-template #contentTemplateEmoji>
+  <emoji-mart [darkMode]="false" title="Votre emoji…" emoji="point_up" (emojiClick)="addEmoji($event)"
+    [i18n]="{ search: 'Recherche', categories: { search: 'Résultats de recherche', recent: 'Récents' } }"></emoji-mart>
 </ng-template>

@@ -1,9 +1,12 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, ViewChildren } from '@angular/core';
-import { NzPopoverComponent, NzPopoverDirective } from 'ng-zorro-antd/popover';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { UserService } from 'src/modules/user/services/user.service';
 import { User } from 'src/modules/user/user.model';
 import { MessageSentEventPayload } from '../../input.model';
 
+declare const webkitSpeechRecognition: any
 @Component({
   selector: 'app-feed-input',
   templateUrl: './feed-input.component.html',
@@ -21,6 +24,20 @@ export class FeedInputComponent {
    */
   message: string = "";
 
+  isRecording: boolean = false;
+  isTranscript: boolean = false;
+  recognition = 'webkitSpeechRecognition' in Window ? new webkitSpeechRecognition() : null
+
+  /**
+   * Record audio message
+   */
+  mediaRecorder: MediaRecorder | null = null
+  isRecord: boolean = false
+  isPause: boolean = false
+  streamAudio: MediaStream
+  chunks: Blob[] = [];
+  audioUrl: SafeResourceUrl
+
   users: User[] = [];
 
   /**
@@ -33,8 +50,36 @@ export class FeedInputComponent {
   supportedTypes = "image/png,image/jpeg,image/gif,image/bmp,image/bmp,video/mpeg,video/mp4,application/pdf,audio/mpeg,audio/x-wav,image/webp";
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private nzMessageService: NzMessageService,
+    private sanitizer: DomSanitizer
   ) { }
+
+  async ngOnInit() {
+    this.recognition = this.isSpeechRecognitionSupported() ? new webkitSpeechRecognition() : null
+    if('mediaDevices' in navigator){
+
+      const constraints = { audio: true };
+  
+      this.streamAudio = await navigator.mediaDevices.getUserMedia(constraints);
+      this.mediaRecorder = new MediaRecorder(this.streamAudio);
+      this.mediaRecorder.addEventListener('start', this.onStartRecord);
+      this.mediaRecorder.addEventListener('stop', this.onStopRecord);
+      this.mediaRecorder.addEventListener('dataavailable', this.onDataRecord);
+      this.mediaRecorder.addEventListener('pause', this.onPauseRecord);
+      this.mediaRecorder.addEventListener('resume', this.onResumeRecord);
+      this.mediaRecorder.addEventListener('error', this.onErrorRecord);
+    }
+  }
+
+  ngOnDestroy() {
+    this.mediaRecorder?.removeEventListener('start', this.onStartRecord);
+    this.mediaRecorder?.removeEventListener('stop', this.onStopRecord);
+    this.mediaRecorder?.removeEventListener('dataavailable', this.onDataRecord);
+    this.mediaRecorder?.removeEventListener('pause', this.onPauseRecord);
+    this.mediaRecorder?.removeEventListener('resume', this.onResumeRecord);
+    this.mediaRecorder?.removeEventListener('error', this.onErrorRecord);
+  }
 
   /**
    * Triggered when the user is selecting a mention in the list.
@@ -79,6 +124,7 @@ export class FeedInputComponent {
    */
   onCloseTag() {
     this.setFile(null);
+    this.audioUrl = '';
   }
 
   /**
@@ -110,7 +156,9 @@ export class FeedInputComponent {
    * @param e
    */
   onInputKeyUp(e: KeyboardEvent) {
-
+    if(e.keyCode === 50 && e.key === '@'){
+      this.showMentionList(e.key.match(/^@[a-z][A-Z][0-9]/)!)
+    }
   }
 
   async searchMentionedUsers(search: string) {
@@ -163,6 +211,125 @@ export class FeedInputComponent {
   clear() {
     this.message = "";
     this.setFile(null);
-    this.inputPopover.hide();
+    if(this.audioUrl) this.audioUrl = '';
+    this.inputPopover?.hide();
+  }
+
+  /**
+   * Check if the browser support Speech Recognition API
+   */
+  isSpeechRecognitionSupported(): boolean {
+    return window.hasOwnProperty('webkitSpeechRecognition')
+  }
+
+  /**
+   * Listen and transcript voice speech
+   */
+  speech() {
+    if(this.recognition === null){
+      return
+    }
+    if(this.isRecording) {
+      this.isRecording = false;
+      dispatchEvent(new Event('result'));
+      return;
+    }
+    this.isRecording = true;
+    this.recognition.lang = 'fr-FR';
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+    this.recognition.start();
+    this.recognition.onresult = (e: any) => {
+      this.isTranscript = true;
+      const result = e.results.item(e.resultIndex)
+      if(result.isFinal) {
+        const transcript = result.item(0).transcript;
+        this.message += " " + transcript;
+      }
+    };
+    this.recognition.onend = (_e: any) => {
+      this.isTranscript = false;
+      this.isRecording = false;
+      this.recognition.stop();
+    }
+  }
+
+  /**
+   * append selected emoji in message
+   */
+  addEmoji(e: any) {
+    this.message += e.emoji.native
+  }
+
+  /**
+   * Check is the browser supports MediaDevices API
+   */
+  isRecordMediaSupport(): boolean {
+    return !!this.mediaRecorder;
+  }
+
+  record() {
+    if(this.isRecord)
+      this.stopRecord()
+    else this.startRecord()
+  }
+
+  /**
+   * Start record audio message
+   */
+  startRecord() {
+    this.mediaRecorder?.start();
+  }
+
+   /**
+   * Stop record audio message
+   */
+  stopRecord() {
+    this.mediaRecorder?.stop();
+  }
+
+  pauseRecord() {
+    this.mediaRecorder?.pause()
+  }
+
+  resumeRecord() {
+    this.mediaRecorder?.resume()
+  }
+
+  onErrorRecord = (_e: MediaRecorderErrorEvent) => {
+    this.nzMessageService.error('Nous avons rencontré un problème lors de l\'enregistrement de votre message vocal. Veuillez réessayer SVP.');
+  }
+
+  onPauseRecord = (_e: Event) => {
+    //Switch button to pause |>
+    this.isPause = true;
+    this.nzMessageService.info("L'enregistrement est en pause.");
+  }
+
+  onResumeRecord = (_e: Event) => {
+    //Switch button to play ||
+    this.isPause = false;
+    this.nzMessageService.info("L'enregistrement a repris.");
+  }
+
+  onDataRecord = (e: BlobEvent) => {
+    this.chunks.push(e.data);
+  }
+
+  onStopRecord = (_e: Event) => {
+    this.isRecord = false;
+    
+    const file = new File(this.chunks, 'audio_message.ogg', {
+      type: 'audio/ogg'
+    });
+    this.setFile(file);
+    const blob = new Blob(this.chunks, { type: "audio/ogg; codecs=opus"});
+    this.audioUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob));
+    this.streamAudio?.getAudioTracks().forEach(track => track.enabled = false);
+  }
+
+  onStartRecord = (_e: Event) => {
+    this.isRecord = true;
+    this.nzMessageService.info("Vous êtes entrain d'être enregistré. Cliquer sur le micro une fois terminé.");
   }
 }

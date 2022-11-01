@@ -1,4 +1,4 @@
-import { MessageAudioElement, MessageElement, MessageImageElement, MessagePDFElement, MessageTextElement, MessageVideoElement, MessageYoutubeElement, Post, PostData, PostMessage } from '../post.model';
+import { MessageAudioElement, MessageElement, MessageImageElement, MessageLinkElement, MessagePDFElement, MessageTextElement, MessageVideoElement, MessageYoutubeElement, Post, PostData, PostMessage } from '../post.model';
 
 export class PostMapper {
   map(data: PostData): Post {
@@ -18,9 +18,11 @@ export class PostMapper {
      // TODO mp3,ogg,wav
     const audioRegex = /http[s]?:\/\/.+\.(mp3|ogg|wav)/gmi;
 
-    const youtubeRegex = /(http[s]?:\/\/)?www\.(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi;
+    const youtubeRegex = /(http[s]?:\/\/)?[www\.]?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi;
 
     const pdfRegex = /http[s]?:\/\/.+\.(pdf)/gmi;
+    
+    const linkRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gmi
     const attachements: MessageElement[] = [];
 
     const pictureMatche = pictureRegex.exec(message);
@@ -56,6 +58,13 @@ export class PostMapper {
       const pdfAttachement: MessagePDFElement = {type: 'pdf', url: pdfMatche?.[0]}
       attachements.push(pdfAttachement);
     }
+
+    const linkMatche = linkRegex.exec(message);
+    if(linkMatche) {
+      const linkAttachement: MessageLinkElement = {type: 'link', url: linkMatche?.[0]};
+      attachements.push(linkAttachement);
+    }
+
     return {
       text: {
         type: 'text',

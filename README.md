@@ -1,4 +1,4 @@
-# ItiCommunity
+# ToradorCommunity
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.6.
 
@@ -26,41 +26,44 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-
-
-------------------------------
-
-
+---
 
 ## Outils
+
 - installer le plugin chrome [Angular DevTools](https://chrome.google.com/webstore/detail/angular-devtools/ienfalfjdbdpebioblfackkekamfmbnh)
 
 - installer le plugin [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template)
 
 ## Documentation
+
 - [Angular](https://angular.io/docs)
 - [Librairie de composant](https://ng.ant.design/docs/introduce/en)
 
+## Fun Features Added
+
+- Speech Recognition and transcription to text message 💬
+- Vocal message Record 🎤
+- Emoji message 😎
+- PDF file and link supports 🖥️
+
 ## TP
 
-
 ### Sign Up
+
 Permet d'enregistrer un nouvel utilisateur sur la plateforme.
 
-
 Le formulaire contient 3 champs : "username", "Mot de passe" et "Confirmation du mot de passe".
-    
+
 Au clic sur le bouton "S'enregistrer", le formulaire va déclancher l'évenement `ngSubmit`. Le formulaire est déjà configuré pour invoquer la méthode `submit()` déclarée sur le composant
 
-
 ```html
-<form nz-form nzLayout="vertical" #f="ngForm" (ngSubmit)="submit()">
+<form nz-form nzLayout="vertical" #f="ngForm" (ngSubmit)="submit()"></form>
 ```
 
 Le inputs son créés à partir du composant `nz-form-item` de la ui library [ng-zorro](https://ng.ant.design/components/input/en)
 
 #### Level I ✅
-    
+
 1. Terminer le formulaire pour l'ajout d'un utilisateur
 2. Rendre le username et le mot de passe obligatoires
 3. En cas de succès, rediriger l'utilisateur sur /splash/login
@@ -68,14 +71,15 @@ Le inputs son créés à partir du composant `nz-form-item` de la ui library [ng
 #### Level II ✅
 
 4. Afficher les messages d'erreurs de validations
-    > Utiliser la propriété `nzErrorTip` sur le composant `nz-form-control`
-    ```html
-    <nz-form-control nzErrorTip="Message de validation">
-    ```
+   > Utiliser la propriété `nzErrorTip` sur le composant `nz-form-control`
+   ```html
+   <nz-form-control nzErrorTip="Message de validation"></nz-form-control>
+   ```
 5. Vérifier si le username est disponible. Informer l'utilisateur de l'indisponibilité d'un username.
-    > Utiliser le la méthode `exists` sur la classe `UserQueries`
+   > Utiliser le la méthode `exists` sur la classe `UserQueries`
 
 ### Sign In
+
 Permet à un utilisateur de se connecter à la plateforme.
 
 Le formulaire doit contenir 2 champs : "username", "Mot de passe".
@@ -91,59 +95,73 @@ Le clic sur le bouton "Connexion" permet de soumettre le formulaire en appelant 
 
 4. Afficher les messages d'erreurs de validation pour chaque champs
 5. Afficher un message si le login a échoué
-    > Vous pouvez utiliser le `NzMessageService` pour afficher des messages
+   > Vous pouvez utiliser le `NzMessageService` pour afficher des messages
 
 ### Room
+
 Une room est une salle de discussion dans laquelle les utilisateurs peuvent s'échanger des messages.
 
 Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster du contenu.
 
-
 #### Level I ✅
 
 1. Afficher la liste des rooms dans le menu
-    > `src/modules/room/room-menu`
 
-    > Utiliser la directive ngFor pour itérer sur les rooms et afficher leurs noms
+   > `src/modules/room/room-menu`
+
+   > Utiliser la directive ngFor pour itérer sur les rooms et afficher leurs noms
 
 2. Pouvoir naviguer vers room au clic dans le menu
 
 #### Level II ✅
 
 3. Pouvoir ajouter une nouvelle room
-    > Dans `src/modules/room/room-menu`
 
-    > Appeler la méthode open du composant `app-room-create-modal` au clic du bouton "+"
-    > Dans `src/modules/room/room-create-modal`
+   > Dans `src/modules/room/room-menu`
 
-    > Terminer le formulaire d'ajout d'une room en ajoutant le champs **obligatire** manquant
-    ```html
-    <nz-form-item>
-      <nz-form-label nzFor="name">Nom de la room</nz-form-label>
-      <nz-form-control nzErrorTip="Nom obligatoire">
-        <input class="ant-input" type="text" name="name" id="name"  #nom="ngModel">
-      </nz-form-control>
-    </nz-form-item>
-    ```
-    > Lors de la validation du formulaire, la méthode ```onOk``` sera invoquée (tel que configuré sur le composant `nz-modal`)
+   > Appeler la méthode open du composant `app-room-create-modal` au clic du bouton "+"
+   > Dans `src/modules/room/room-create-modal`
+
+   > Terminer le formulaire d'ajout d'une room en ajoutant le champs **obligatire** manquant
+
+   ```html
+   <nz-form-item>
+     <nz-form-label nzFor="name">Nom de la room</nz-form-label>
+     <nz-form-control nzErrorTip="Nom obligatoire">
+       <input
+         class="ant-input"
+         type="text"
+         name="name"
+         id="name"
+         #nom="ngModel"
+       />
+     </nz-form-control>
+   </nz-form-item>
+   ```
+
+   > Lors de la validation du formulaire, la méthode `onOk` sera invoquée (tel que configuré sur le composant `nz-modal`)
 
 4. Sélectionner par défaut la première room de la liste
-    > Rediriger vers la première room si il n'y a pas de roomId dans le store. 
-    > Tester `this.feedStore.value.roomId`
-  
+
+   > Rediriger vers la première room si il n'y a pas de roomId dans le store.
+   > Tester `this.feedStore.value.roomId`
+
 5. Ajouter ajouter les nouvelles rooms créées dynamiquement
 
 #### Level III ✅
+
 6. Sélectionner par défaut la dernière room visité par l'utilisateur en stockant l'information dans le [localStorage](https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage)
 
 ### Post
 
 ### Level I ✅
+
 1. Pouvoir rédiger et envoyer un post
-    > `src/modules/input/components/feed-input`
+
+   > `src/modules/input/components/feed-input`
 
 2. Afficher les posts reçues dans la room
-    > `src/modules/feed/components/feed`
+   > `src/modules/feed/components/feed`
 3. Afficher le nom de l'auteur des messages
 4. Afficher la photo de l'auteur des messages
 5. Afficher la date du post
@@ -152,17 +170,19 @@ Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster 
 8. Afficher le player de youtube si le message contient un lien youtube
 9. Implémenter le bouton like
 
-### Level II 
+### Level II
+
 8. Utiliser [luxon](https://moment.github.io/luxon/docs/class/src/duration.js~Duration.html) pour formatter les date à l'aide d'un [Pipe Angular](https://angular.io/guide/pipes#creating-pipes-for-custom-data-transformations)
 9. Insérer les nouveaux posts reçues via WebSocket
 10. Pouvoir uploader des photos, vidéos et audios
 
 ### Level III
+
 10. Pouvoir parser plusieurs type de contenus dans un seul post
 11. Remplacer les liens http par des balises <a>...</a>.
 12. Dans les messages, afficher les mentions `@username` en vert
 
-### User Widget 
+### User Widget
 
 ### Level I
 
@@ -179,14 +199,16 @@ Un utilisateur doit en amont avoir sélectionné une room pour pouvoir y poster 
 3. Afficher sur fond vert les notifications non lues
 
 ### Level II
+
 4. Afficher les nouvelles notifications reçues dans la [popup de notification](https://ng.ant.design/components/notification/en)
 
 ### Level III
+
 5.  Créer un service permettant de poster des [notifications web](https://developer.mozilla.org/fr/docs/Web/API/notification/Using_Web_Notifications)
 
-6. N'afficher les notifications Web que si la page n'est pas visible grâce à l'évènement [visibilitychange](https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange)
+6.  N'afficher les notifications Web que si la page n'est pas visible grâce à l'évènement [visibilitychange](https://developer.mozilla.org/en-US/docs/Web/Events/visibilitychange)
 
-7. Rendre la notification clicable. Au clic, la notification doit rediriger soit vers un post, soit vers une room en fonction de la notification
+7.  Rendre la notification clicable. Au clic, la notification doit rediriger soit vers un post, soit vers une room en fonction de la notification
 
 ## Help
 

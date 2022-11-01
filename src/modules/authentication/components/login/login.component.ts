@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
       if(!status.success) return this.nzMessageService.error('Vos identifiants sont incorrects.');
       this.router.navigateByUrl('/');
     } catch (e) {
+      this.loading = false;
       this.nzMessageService.error("Une erreur est survenue. Veuillez réessayer plus tard");
     }
   }
