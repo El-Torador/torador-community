@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MessagePDFElement, MessageVideoElement } from '../../../post.model';
+import { MessagePDFElement } from '../../../post.model';
 
 @Component({
   selector: 'app-post-attachement-pdf',

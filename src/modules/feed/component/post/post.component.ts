@@ -30,4 +30,8 @@ export class PostComponent implements OnInit, AfterViewInit {
     // TODO like du post
     this.postService.like(this.post);
   }
+
+  trackElementByIndex(index: number) {
+    return index;
+  }
 }

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import type { EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzPopoverDirective } from 'ng-zorro-antd/popover';
 import { UserService } from 'src/modules/user/services/user.service';
@@ -18,6 +19,9 @@ export class FeedInputComponent {
 
   @ViewChild(NzPopoverDirective)
   inputPopover: NzPopoverDirective;
+
+  @ViewChild('inputMessage') private inputMessageRef: ElementRef<HTMLInputElement>;
+
 
   /**
    * Hold the input message
@@ -255,10 +259,16 @@ export class FeedInputComponent {
   }
 
   /**
-   * append selected emoji in message
+   * add selected emoji nearby the position cursor in input message
    */
-  addEmoji(e: any) {
-    this.message += e.emoji.native
+  addEmoji(e: EmojiEvent) {
+    const indexCursor = this.inputMessageRef.nativeElement.selectionStart;
+    if(!indexCursor) {
+      this.message += e.emoji.native;
+      return
+    }
+    
+    this.message = `${this.message.slice(0, indexCursor)}${e.emoji.native}${this.message.slice(indexCursor, this.message.length)}`
   }
 
   /**

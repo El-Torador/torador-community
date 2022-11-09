@@ -11,9 +11,10 @@ import { UserModule } from '../user/user.module';
 import { FeedInputComponent } from './components/feed-input/feed-input.component';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { RecordingIconComponent } from 'src/app/recording-icon/recording-icon.component';
 
 @NgModule({
-  declarations: [FeedInputComponent],
+  declarations: [FeedInputComponent, RecordingIconComponent],
   exports: [FeedInputComponent],
   imports: [
     CommonModule,
@@ -26,7 +27,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
     NzPopoverModule,
     NzTagModule,
     NzToolTipModule,
-    PickerModule
+    PickerModule,
   ]
 })
 export class InputModule { }

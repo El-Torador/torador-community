@@ -61,6 +61,7 @@ export class PostMapper {
 
     const linkMatche = linkRegex.exec(message);
     if(linkMatche) {
+      
       const linkAttachement: MessageLinkElement = {type: 'link', url: linkMatche?.[0]};
       attachements.push(linkAttachement);
     }

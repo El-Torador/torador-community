@@ -28,6 +28,7 @@ export class RoomMenuComponent implements OnInit {
 
   async ngOnInit() {
     this.rooms = await this.queries.getAll();
+    
     const lastRoomIdVisited = this.getLastRoomIdVisited()
     if(lastRoomIdVisited) this.router.navigateByUrl(`app/${lastRoomIdVisited}`)
   }
@@ -58,5 +59,9 @@ export class RoomMenuComponent implements OnInit {
     }
     this.setLastRoomIdVisited(room.id)
     this.router.navigateByUrl(`app/${room.id}`)
+  }
+
+  trackRoom(_index: number, room: Room) {
+    return room.id;
   }
 }

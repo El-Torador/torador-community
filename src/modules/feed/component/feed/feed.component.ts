@@ -37,4 +37,8 @@ export class FeedComponent implements OnInit {
       }
     })
   }
+
+  trackPost(_index: number, post: Post) {
+    return post.id;
+  }
 }

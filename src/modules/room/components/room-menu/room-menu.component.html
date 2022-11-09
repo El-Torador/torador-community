@@ -8,7 +8,7 @@
     TODO itérer sur les rooms. Au clic, naviguer sur la room sélectionnée.
     Remplacer [id de la room] par l'id de la room itérée
   -->
-  <div class="menu-item" [ngClass]="{'selected': (roomId$ | async) === room.id}" *ngFor="let room of rooms"
+  <div class="menu-item" [ngClass]="{'selected': (roomId$ | async) === room.id}" *ngFor="let room of rooms; trackBy: trackRoom"
     (click)="goToRoom(room)">
     {{room.name}}
   </div>

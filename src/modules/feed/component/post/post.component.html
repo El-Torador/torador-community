@@ -22,7 +22,7 @@
   </p>
 
   <!-- Itérer sur les "attachements" du message -->
-  <div class="post-attachements" *ngFor="let element of post.message.attachements">
+  <div class="post-attachements" *ngFor="let element of post.message.attachements; trackBy: trackElementByIndex">
     <!-- Utiliser ngIf pour afficher le bon composant en fonction du type d'élément-->
     <app-post-attachement-youtube *ngIf="element.type === 'youtube'" [element]="element">
     </app-post-attachement-youtube>
@@ -30,6 +30,7 @@
     <app-post-attachement-audio *ngIf="element.type === 'audio'" [element]="element"></app-post-attachement-audio>
     <app-post-attachement-video *ngIf="element.type === 'video'" [element]="element"></app-post-attachement-video>
     <app-post-attachement-pdf *ngIf="element.type === 'pdf'" [element]="element"></app-post-attachement-pdf>
+    <app-post-attachement-link *ngIf="element.type === 'link'" [element]="element"></app-post-attachement-link>
     <div *ngIf="element.type === 'text'">{{element.content}}</div>
 
   </div>

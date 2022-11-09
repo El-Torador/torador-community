@@ -22,9 +22,10 @@ import { FeedSocketService } from './services/feed.socket.service';
 import { RemoveUrlPipe } from './remove-url.pipe';
 import { LisibleDatePipe } from './lisible-date.pipe';
 import { PostAttachementPDFComponent } from './component/post-attachements/post-attachement-pdf/post-attachement-pdf';
+import { PostAttachementLinkComponent } from './component/post-attachements/post-attachement-link/post-attachement-link';
 
 @NgModule({
-  declarations: [FeedComponent, PostComponent, PostAttachementImageComponent, PostAttachementVideoComponent, PostAttachementAudioComponent, PostAttachementYoutubeComponent, PostAttachementPDFComponent, RemoveUrlPipe, LisibleDatePipe],
+  declarations: [FeedComponent, PostComponent, PostAttachementImageComponent, PostAttachementVideoComponent, PostAttachementAudioComponent, PostAttachementYoutubeComponent, PostAttachementPDFComponent, PostAttachementLinkComponent, RemoveUrlPipe, LisibleDatePipe],
   exports: [FeedComponent, PostComponent],
   providers: [PostMapper, PostService, FeedStore,FeedSocketService, {
     provide: PostCommands,
