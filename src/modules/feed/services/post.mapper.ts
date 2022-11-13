@@ -1,4 +1,4 @@
-import { MessageAudioElement, MessageElement, MessageImageElement, MessageLinkElement, MessagePDFElement, MessageTextElement, MessageVideoElement, MessageYoutubeElement, Post, PostData, PostMessage } from '../post.model';
+import { MessageAudioElement, MessageElement, MessageImageElement, MessageLinkElement, MessageMentionElement, MessagePDFElement, MessageTextElement, MessageVideoElement, MessageYoutubeElement, Post, PostData, PostMessage } from '../post.model';
 
 export class PostMapper {
   map(data: PostData): Post {
@@ -24,6 +24,8 @@ export class PostMapper {
     
     const linkRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gmi
     const attachements: MessageElement[] = [];
+
+    const mentionRegex = /\B@[a-z0-9_-]+/gi
 
     const pictureMatche = pictureRegex.exec(message);
     if (pictureMatche) {
@@ -64,6 +66,13 @@ export class PostMapper {
       
       const linkAttachement: MessageLinkElement = {type: 'link', url: linkMatche?.[0]};
       attachements.push(linkAttachement);
+    }
+
+    const mentionMatche = message.match(mentionRegex);
+    message.match(mentionRegex)
+    if(mentionMatche) {
+      const mentionAttachement: MessageMentionElement = {type: 'mention', value: mentionMatche};
+      attachements.push(mentionAttachement);
     }
 
     return {

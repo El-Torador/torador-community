@@ -16,7 +16,11 @@
     <i nz-icon nzType="heart" [nzTheme]="post.liked ? 'fill' : 'outline'"></i>
   </div>
 
-  <p class="post-text">
+  <p class="post-text" *ngIf="isContainsMentions()"
+    [innerHTML]="post.message.text.content | removeUrl: post.message.attachements">
+  </p>
+
+  <p class="post-text" *ngIf="!isContainsMentions()">
     <!-- Afficher le texte du poste uniquement-->
     {{post.message.text.content | removeUrl: post.message.attachements}}
   </p>

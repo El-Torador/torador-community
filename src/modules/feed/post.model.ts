@@ -59,6 +59,11 @@ export interface MessagePDFElement{
     url: string;
 }
 
+export interface MessageMentionElement{
+    type: 'mention';
+    value: string[];
+}
+
 export type MessageElement =
     MessageTextElement |
     MessageYoutubeElement |
@@ -66,4 +71,5 @@ export type MessageElement =
     MessageVideoElement |
     MessageAudioElement |
     MessagePDFElement |
-    MessageLinkElement;
+    MessageLinkElement |
+    MessageMentionElement;

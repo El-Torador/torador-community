@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { User } from '../../user.model';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 export class UserProfileForm {
   id: string;
@@ -60,7 +61,7 @@ export class UserProfileModalComponent implements OnInit {
   isVisible: boolean = false;
   model: UserProfileForm;
 
-  constructor(private userService: UserService, private sanitizer: DomSanitizer) {
+  constructor(private userService: UserService, private sanitizer: DomSanitizer, private nzMessageService: NzMessageService) {
 
   }
 
@@ -74,9 +75,22 @@ export class UserProfileModalComponent implements OnInit {
 
   async onOk() {
     // TODO vérifier si le formulaire est valide
+    if(this.form.form.invalid) {
+      if(!this.model.username) return this.nzMessageService.warning("Veuillez fournir un nom d'utilisateur.");
+    }
 
     if (this.model.hasChanged()) {
       // TODO mettre à jour l'utilisateur via le service
+      const idLoading = this.nzMessageService.loading('Mise à jour en cours...')
+      try {
+        await this.userService.update({id: this.model.id, username: this.model.username, photo: this.model.file});
+        this.nzMessageService.success('Mise à jour réussie !');
+      } catch (error) {
+        console.error(error);
+        this.nzMessageService.error('Nous avons rencontré un problème lors de la mise à jour de vos informations. Veuillez réessayer SVP !');
+      } finally {
+        this.nzMessageService.remove(idLoading.messageId);
+      }
     }
 
     this.close();

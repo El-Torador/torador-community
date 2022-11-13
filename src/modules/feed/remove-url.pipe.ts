@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MessageElement } from 'src/modules/feed/post.model';
 
 @Pipe({
@@ -6,32 +7,44 @@ import { MessageElement } from 'src/modules/feed/post.model';
 })
 export class RemoveUrlPipe implements PipeTransform {
 
-  transform(value: string, attachements: MessageElement[]): string {
+  constructor(private sanitizer: DomSanitizer) {
+
+  }
+
+  transform(value: string, attachements: MessageElement[]): string | SafeHtml {
+    let safeValue: SafeHtml = ''
     attachements.forEach(attachement => {
       switch (attachement.type) {
         case 'audio':
-          value = value.replace(attachement.url, '')
+          value = value.replaceAll(attachement.url, '')
           break;
         case 'image':
-          value = value.replace(attachement.url, '');
+          value = value.replaceAll(attachement.url, '');
           break;
         case 'video':
-          value = value.replace(attachement.url, '');
+          value = value.replaceAll(attachement.url, '');
           break;
         case 'youtube':
-          value = value.replace(/(http[s]?:\/\/)?(www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
+          value = value.replaceAll(/(http[s]?:\/\/)?(www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
         case 'pdf':
-          value = value.replace(/http[s]?:\/\/.+\.(pdf)/gmi, '');
+          value = value.replaceAll(/http[s]?:\/\/.+\.(pdf)/gmi, '');
           break;
         case 'link':
-          value = value.replace(/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s][^pdf|mp3|ogg|wav]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s][^pdf|mp3|ogg|wav]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gmi, '');
+          value = value.replaceAll(attachement.url, '');
+          break;
+        case 'mention':
+          attachement.value.forEach(val => {
+            value = value.replaceAll(val, `<span style="color: green;">${val}</span>`)
+          })
+          
+          safeValue = this.sanitizer.bypassSecurityTrustHtml(value)
           break;
         default:
           break;
       }
     })
     
-    return value;
+    return safeValue || value;
   }
 
 }

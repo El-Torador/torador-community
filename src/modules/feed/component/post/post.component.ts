@@ -19,7 +19,6 @@ export class PostComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.post);
   }
 
   ngAfterViewInit() {
@@ -33,5 +32,14 @@ export class PostComponent implements OnInit, AfterViewInit {
 
   trackElementByIndex(index: number) {
     return index;
+  }
+
+  isContainsMentions(): boolean {
+    let result = false
+    for (const attachement of this.post.message.attachements) {
+      if(attachement.type === 'mention') result = true
+    }
+
+    return result;
   }
 }
