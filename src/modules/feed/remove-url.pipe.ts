@@ -30,6 +30,11 @@ export class RemoveUrlPipe implements PipeTransform {
           value = value.replace(/http[s]?:\/\/.+\.(pdf)/gmi, '');
           break;
         case 'link':
+          value = value.replace(/http[s]?:\/\/.+\.(jpeg|jpg|gif|png|bmp|webp)/gmi, '')
+          value = value.replace(/http[s]?:\/\/.+\.(mp4|wmv|flv|avi|wav)/gmi, '')
+          value = value.replace(/http[s]?:\/\/.+\.(mp3|ogg|wav)/gmi, '')
+          value = value.replace(/(http[s]?:\/\/)?[www\.]?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '')
+          value = value.replace(/http[s]?:\/\/.+\.(pdf)/gmi, '')
           value = value.replaceAll(attachement.url, '');
           break;
         case 'mention':

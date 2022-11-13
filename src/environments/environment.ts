@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  serverBaseUrl: 'https://torador-community-server.herokuapp.com'
+  serverBaseUrl: "http://localhost:3000" //'https://torador-community-server.herokuapp.com'
 };
 
 /*
