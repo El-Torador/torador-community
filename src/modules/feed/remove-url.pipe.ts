@@ -16,18 +16,18 @@ export class RemoveUrlPipe implements PipeTransform {
     attachements.forEach(attachement => {
       switch (attachement.type) {
         case 'audio':
-          value = value.replaceAll(attachement.url, '')
+          value = value.replace(attachement.url, '')
           break;
         case 'image':
-          value = value.replaceAll(attachement.url, '');
+          value = value.replace(attachement.url, '');
           break;
         case 'video':
-          value = value.replaceAll(attachement.url, '');
+          value = value.replace(attachement.url, '');
           break;
         case 'youtube':
-          value = value.replaceAll(/(http[s]?:\/\/)?(www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
+          value = value.replace(/(http[s]?:\/\/)?(www\.)?(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/gmi, '');
         case 'pdf':
-          value = value.replaceAll(/http[s]?:\/\/.+\.(pdf)/gmi, '');
+          value = value.replace(/http[s]?:\/\/.+\.(pdf)/gmi, '');
           break;
         case 'link':
           value = value.replaceAll(attachement.url, '');
