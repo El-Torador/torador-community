@@ -51,8 +51,8 @@ export class PostMapper {
     const youtubeMatche = youtubeRegex.exec(message)
     if (youtubeMatche) {
      // TODO ajouter un attachement de type youtube dans attachements
-    const youtubeAttachement: MessageYoutubeElement = {type: 'youtube', videoId: youtubeMatche?.[2]};
-     attachements.push(youtubeAttachement);
+      const youtubeAttachement: MessageYoutubeElement = {type: 'youtube', videoId: youtubeMatche?.[2]};
+      attachements.push(youtubeAttachement);
     }
 
     const pdfMatche = pdfRegex.exec(message);
@@ -63,13 +63,15 @@ export class PostMapper {
 
     const linkMatche = linkRegex.exec(message);
     if(linkMatche) {
-      
-      const linkAttachement: MessageLinkElement = {type: 'link', url: linkMatche?.[0]};
-      attachements.push(linkAttachement);
+      if(!linkMatche?.[0].match(audioRegex) && !linkMatche?.[0].match(videoRegex) && !linkMatche?.[0].match(youtubeRegex) && !linkMatche?.[0].match(pictureRegex) && !linkMatche?.[0].match(pdfRegex)) {
+
+        const linkAttachement: MessageLinkElement = {type: 'link', url: linkMatche?.[0]};
+        attachements.push(linkAttachement);
+      }
     }
 
     const mentionMatche = message.match(mentionRegex);
-    message.match(mentionRegex)
+
     if(mentionMatche) {
       const mentionAttachement: MessageMentionElement = {type: 'mention', value: mentionMatche};
       attachements.push(mentionAttachement);
