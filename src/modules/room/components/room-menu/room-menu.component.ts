@@ -28,13 +28,13 @@ export class RoomMenuComponent implements OnInit {
 
   async ngOnInit() {
     this.rooms = await this.queries.getAll();
+
+    this.roomSocketService.onNewRoom(room => {
+      this.rooms.push(room)
+    });
     
     const lastRoomIdVisited = this.getLastRoomIdVisited()
     if(lastRoomIdVisited) this.router.navigateByUrl(`app/${lastRoomIdVisited}`)
-  }
-
-  async addNewRoom (room: Room) {
-    this.rooms.push(room);
   }
 
   openModal() {

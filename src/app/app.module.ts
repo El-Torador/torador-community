@@ -27,6 +27,7 @@ import { WebsocketConnection } from 'src/modules/common/WebsocketConnection';
 import { SocketIoWebsocketConnection } from 'src/modules/common/SocketIoWebsocketConnection';
 import { WebSocketTopic } from 'src/modules/common/WebSocketTopic';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 const ws = new SocketIoWebsocketConnection();
 
 registerLocaleData(fr);
@@ -55,7 +56,8 @@ registerLocaleData(fr);
     BrowserAnimationsModule,
     NzFormModule,
     NzButtonModule,
-    NzInputModule
+    NzInputModule,
+    NzNotificationModule
   ],
   providers: [{ provide: NZ_I18N, useValue: fr_FR }, {
     provide: WebsocketConnection,

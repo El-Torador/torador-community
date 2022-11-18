@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NotificationSocketService } from 'src/modules/notification/services/notification.socket.service';
 import { Room, RoomType } from '../../room.model';
 import { RoomService } from '../../services/room.service';
 
@@ -17,11 +18,10 @@ export class CreateRoomFormModel {
 export class RoomCreateModalComponent implements OnInit {
   @ViewChild("f")
   form: NgForm;
-  @Output() dispatchRoom = new EventEmitter<Room>()
   isVisible: boolean = false;
   model = new CreateRoomFormModel();
 
-  constructor(private roomService: RoomService, private nzMessageService: NzMessageService) {
+  constructor(private roomService: RoomService, private nzMessageService: NzMessageService, private notificationSocketService: NotificationSocketService) {
 
   }
 
@@ -31,8 +31,8 @@ export class RoomCreateModalComponent implements OnInit {
   async onOk() {
     if (this.form.form.valid) {
       // TODO invoquer la méthode create du RoomService
-      const newRoom = await this.roomService.create(this.model.name, this.model.type);
-      this.dispatchRoom.emit(newRoom);
+      await this.roomService.create(this.model.name, this.model.type);
+      
       this.close();
     }else{
       this.nzMessageService.error('Les champs sont invalid.')

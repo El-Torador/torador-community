@@ -1,6 +1,17 @@
 <div class="app-layout">
   <div class="panel-drawer" [ngClass]="{opened: showDrawer}">
     <!-- Afficher la liste des notifications -->
+    <div [class]="(hasUnread$ | async) ? 'notif' : 'notif view'" *ngFor="let notification of (notifications$ | async)">
+      <img class="notif-thumb" *ngIf="notification.payload.user.photoUrl" [src]="notification.payload.user.photoUrl"
+        [alt]="notification.payload.user.username">
+      <img class="notif-thumb" *ngIf="!notification.payload.user.photoUrl"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/434px-Unknown_person.jpg"
+        alt="notification.payload.user.username">
+      <div class="notif-content">
+        <h1 class="notif-subject">{{getTranslation(notification)}}</h1>
+        <small class="notif-date">{{notification.timestamp | date: 'd LLL h:mm' }}</small>
+      </div>
+    </div>
   </div>
   <div class="app-layout-panel-left">
     <div class="panel-head">

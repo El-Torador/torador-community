@@ -15,10 +15,11 @@ export class NotificationService {
 
   async fetch() {
     const notifications = await this.notificationQueries.getNotifications();
+
     this.store.mutate(s => {
       return {
         ...s,
-        notifications
+        notifications: notifications.reverse()
       }
     });
   }

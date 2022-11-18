@@ -41,7 +41,7 @@ export class FeedInputComponent {
   streamAudio: MediaStream
   chunks: Blob[] = [];
   audioUrl: SafeResourceUrl
-
+  alreadyMentionMatches: string[] = []
   users: User[] = [];
 
   /**
@@ -91,7 +91,8 @@ export class FeedInputComponent {
    */
   chooseMention(user: User) {
     if (this.currentMention) {
-      this.message = this.message.substr(0, this.currentMention.index! + 1) + user.username + this.message.substr(this.currentMention.index! + this.currentMention[1].length + 1) + " ";
+      this.message = this.message.substr(0, this.currentMention.index! + 1) + user.username + this.message.substr(this.currentMention.index! + this.currentMention[0].length + 1) + " "; 
+      this.alreadyMentionMatches.push(`@${user.username}`);
     }
     this.hideMentionList();
   }
@@ -160,8 +161,11 @@ export class FeedInputComponent {
    * @param e
    */
   onInputKeyUp(e: KeyboardEvent) {
-    if(e.keyCode === 50 && e.key === '@'){
-      this.showMentionList(e.key.match(/^@[a-z][A-Z][0-9]/)!)
+    const mentionMatch = this.message.match(/@[A-Za-z0-9_-]*/i)!;
+    if(mentionMatch?.[0]){
+      if(this.alreadyMentionMatches.includes(mentionMatch[0])) return
+      this.searchMentionedUsers(mentionMatch[0]?.replace('@', '').toLowerCase())
+      this.showMentionList(mentionMatch);
     }
   }
 
